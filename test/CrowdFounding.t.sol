@@ -4,6 +4,8 @@ import {Test, console} from "forge-std/Test.sol";
 import "../src/IRewardToken.sol";
 import "../src/CrowdFounding.sol";
 import "../src/HackQuest.sol";
+
+//众筹合约测试
 contract CrowdFoundingTest is Test {
     IRewardToken token;
     CrowdFounding crowd;
