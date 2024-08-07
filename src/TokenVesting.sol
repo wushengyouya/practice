@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.22;
+
 import "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 //线性释放合约
+
 contract TokenVesting {
     event ERC20Released(address indexed token, uint256 amount); // 提币事件
 
@@ -12,10 +14,7 @@ contract TokenVesting {
 
     //初始化受益人地址，释放周期，起始时间戳
     constructor(address _beneficiary, uint256 _duration) {
-        require(
-            _beneficiary != address(0),
-            "VestingWallet:beneficary is zero address"
-        );
+        require(_beneficiary != address(0), "VestingWallet:beneficary is zero address");
         beneficiary = _beneficiary;
         start = block.timestamp;
         duration = _duration;
@@ -23,8 +22,7 @@ contract TokenVesting {
 
     function release(address token) public {
         // 调用vestedAmount()函数计算可提取的代币数量
-        uint256 releasable = vestedAmount(token, block.timestamp) -
-            erc20Released[beneficiary];
+        uint256 releasable = vestedAmount(token, block.timestamp) - erc20Released[beneficiary];
         require(releasable != 0, "releasable token is zero");
         // 更新已释放代币数量
         erc20Released[beneficiary] += releasable;
@@ -37,13 +35,10 @@ contract TokenVesting {
      * @param token: 代币地址
      * @param timestamp: 查询的时间戳
      */
-    function vestedAmount(
-        address token,
-        uint256 timestamp
-    ) public view returns (uint256) {
+
+    function vestedAmount(address token, uint256 timestamp) public view returns (uint256) {
         // 合约里总共收到了多少代币（当前余额 + 已经提取）
-        uint256 totalAllocation = IERC20(token).balanceOf(address(this)) +
-            erc20Released[beneficiary];
+        uint256 totalAllocation = IERC20(token).balanceOf(address(this)) + erc20Released[beneficiary];
         // 根据线性释放公式，计算已经释放的数量
         if (timestamp < start) {
             return 0;

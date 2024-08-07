@@ -4,9 +4,11 @@ pragma solidity ^0.8.22;
 import {Test, console} from "forge-std/Test.sol";
 import "../src/NFTSwap.sol";
 import "../src/HQKitty.sol";
+
 contract NFTSwapTest is Test {
     HQKitty hqk;
     NFTSwap nftSwap;
+
     function setUp() public {
         hqk = new HQKitty();
         nftSwap = new NFTSwap();
@@ -21,6 +23,7 @@ contract NFTSwapTest is Test {
         vm.prank(address(1));
         nftSwap.list(address(hqk), 1, 3);
     }
+
     function test_purchase() public {
         vm.prank(address(1));
         nftSwap.list(address(hqk), 1, 3);
@@ -34,6 +37,7 @@ contract NFTSwapTest is Test {
         assertEq(addr2Amount + 3, address(1).balance);
         console.log(address(2).balance);
     }
+
     function test_revoke() public {}
     function test_update() public {}
 }

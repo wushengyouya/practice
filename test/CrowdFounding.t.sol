@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
+
 import {Test, console} from "forge-std/Test.sol";
 import "../src/IRewardToken.sol";
 import "../src/CrowdFounding.sol";
@@ -9,6 +10,7 @@ import "../src/HackQuest.sol";
 contract CrowdFoundingTest is Test {
     IRewardToken token;
     CrowdFounding crowd;
+
     function setUp() public {
         HackQuest hackquest = new HackQuest();
         crowd = new CrowdFounding(address(hackquest));
@@ -42,9 +44,9 @@ contract CrowdFoundingTest is Test {
         assertEq(amount, 700);
     }
     //参与众筹
+
     function test_crowd() public view {
-        (uint256 crowdId, uint256 raiseAmount, address owner) = crowd
-            .getCrowdFounding(1);
+        (uint256 crowdId, uint256 raiseAmount, address owner) = crowd.getCrowdFounding(1);
         assertEq(700, token.balanceOf(address(1)));
         console.log(crowdId, raiseAmount, owner);
     }
@@ -76,6 +78,7 @@ contract CrowdFoundingTest is Test {
         assertEq(200, myBalance4);
     }
     //结束众筹
+
     function test_endCrowdFounding() public {
         vm.warp(block.timestamp + 500); //设置区块时间
         crowd.getCrowdFounding(1);

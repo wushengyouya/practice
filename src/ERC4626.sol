@@ -6,17 +6,15 @@
 质押: 在 Lido 中，你可以质押 ETH 参与 ETH 2.0 质押，得到可以生息的 stETH。
 */
 pragma solidity ^0.8.22;
+
 import "./IERC4626.sol";
 import "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
+
 contract ERC4626 is ERC20, IERC4626 {
     ERC20 private immutable _asset;
     uint8 private immutable _decimals;
 
-    constructor(
-        ERC20 asset_,
-        string memory name_,
-        string memory symbol_
-    ) ERC20(name_, symbol_) {
+    constructor(ERC20 asset_, string memory name_, string memory symbol_) ERC20(name_, symbol_) {
         _asset = asset_;
         _decimals = asset_.decimals();
     }
@@ -25,22 +23,13 @@ contract ERC4626 is ERC20, IERC4626 {
         return address(_asset);
     }
 
-    function decimals()
-        public
-        view
-        virtual
-        override(IERC20Metadata, ERC20)
-        returns (uint8)
-    {
+    function decimals() public view virtual override(IERC20Metadata, ERC20) returns (uint8) {
         return _decimals;
     }
 
     //存款/提款逻辑
 
-    function deposit(
-        uint256 assets,
-        address receiver
-    ) public virtual returns (uint256 shares) {
+    function deposit(uint256 assets, address receiver) public virtual returns (uint256 shares) {
         //利用previewDeposit()计算将获得的金库份额
         shares = previewDeposit(assets);
 
@@ -53,10 +42,7 @@ contract ERC4626 is ERC20, IERC4626 {
     }
 
     //铸造
-    function mint(
-        uint256 shares,
-        address receiver
-    ) public virtual returns (uint256 assets) {
+    function mint(uint256 shares, address receiver) public virtual returns (uint256 assets) {
         //利用previewMint() 计算需要存款的基础资产数额
         assets = previewMint(shares);
 
@@ -67,11 +53,7 @@ contract ERC4626 is ERC20, IERC4626 {
         emit Deposit(msg.sender, receiver, assets, shares);
     }
 
-    function withdraw(
-        uint256 assets,
-        address receiver,
-        address owner
-    ) external returns (uint256 shares) {
+    function withdraw(uint256 assets, address receiver, address owner) external returns (uint256 shares) {
         //利用previewWithdraw 计算将销毁的金库金额
         shares = previewWithdraw(assets);
         //如果不是owner,则检查并更新授权
@@ -85,11 +67,7 @@ contract ERC4626 is ERC20, IERC4626 {
         emit Withdraw(msg.sender, receiver, owner, assets, shares);
     }
 
-    function redeem(
-        uint256 shares,
-        address receiver,
-        address owner
-    ) public virtual returns (uint256 assets) {
+    function redeem(uint256 shares, address receiver, address owner) public virtual returns (uint256 assets) {
         //利用previewRedeem() 计算能赎回的基础资产数额
         assets = previewRedeem(shares);
         //如果调用者不是owner,则检查并更新授权
@@ -109,18 +87,14 @@ contract ERC4626 is ERC20, IERC4626 {
         return _asset.balanceOf(address(this));
     }
 
-    function convertToShares(
-        uint256 assets
-    ) public view virtual returns (uint256) {
+    function convertToShares(uint256 assets) public view virtual returns (uint256) {
         // 如果 supply 为 0，那么 1:1 赎回基础资产
         // 如果 supply 不为0，那么按比例赎回
         uint256 supply = totalSupply();
         return supply == 0 ? assets : (assets * supply) / totalAssets();
     }
 
-    function convertToAssets(
-        uint256 shares
-    ) public view virtual returns (uint256) {
+    function convertToAssets(uint256 shares) public view virtual returns (uint256) {
         // 如果 supply 为 0，那么 1:1 赎回基础资产
         // 如果 supply 不为0，那么按比例赎回
         uint256 supply = totalSupply();
@@ -130,21 +104,16 @@ contract ERC4626 is ERC20, IERC4626 {
     function previewMint(uint256 shares) public view virtual returns (uint256) {
         return convertToAssets(shares);
     }
-    function previewDeposit(
-        uint256 assets
-    ) public view virtual returns (uint256) {
+
+    function previewDeposit(uint256 assets) public view virtual returns (uint256) {
         return convertToShares(assets);
     }
 
-    function previewWithdraw(
-        uint256 assets
-    ) public view virtual returns (uint256) {
+    function previewWithdraw(uint256 assets) public view virtual returns (uint256) {
         return convertToShares(assets);
     }
 
-    function previewRedeem(
-        uint256 shares
-    ) public view virtual returns (uint256) {
+    function previewRedeem(uint256 shares) public view virtual returns (uint256) {
         return convertToAssets(shares);
     }
 

@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.22;
+
 import {Test, console} from "forge-std/Test.sol";
 import "../src/MyToken.sol";
 import "../src/AirDrop.sol";
+
 contract AirDropTest is Test {
     AirDrop airDrop;
     MyToken token;
+
     function setUp() public {
         airDrop = new AirDrop();
         token = new MyToken();
@@ -23,6 +26,7 @@ contract AirDropTest is Test {
         airDrop.multiTransferETH{value: 600}(addrs, amounts);
         assertEq(addrs[0].balance, 100);
     }
+
     function test_multiTransferToken() public {
         address[] memory addrs = new address[](3);
         addrs[0] = address(1);

@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.22;
+
 import {Test, console} from "forge-std/Test.sol";
 import "../src/ERC4626.sol";
 import "../src/MyToken.sol";
 import "../src/IERC4626.sol";
+
 contract ERC4626Test is Test {
     IERC4626 ierc4626;
     MyToken token;
+
     function setUp() public {
         token = new MyToken();
         token.mint(address(this), 1000);

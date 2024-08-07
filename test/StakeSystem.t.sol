@@ -8,10 +8,12 @@ import "../src/StakeSystem.sol";
 import "../src/HackQuest.sol";
 import "../src/HQKitty.sol";
 //质押合约测试
+
 contract StakeSystemTest is Test {
     HQKitty hqkitty;
     HackQuest hackQuest;
     StakeSystem stakeSystem;
+
     function setUp() public {
         hqkitty = new HQKitty();
         hackQuest = new HackQuest();
@@ -24,25 +26,19 @@ contract StakeSystemTest is Test {
 
     function test_mint() public {
         hackQuest.mint(msg.sender, 100);
-        uint256 balance = hackQuest.balanceOf(
-            0x1804c8AB1F12E6bbf3894d4083f33e07309d1f38
-        );
+        uint256 balance = hackQuest.balanceOf(0x1804c8AB1F12E6bbf3894d4083f33e07309d1f38);
         assertEq(100 + 2000, balance);
     }
 
     function testFail_mint() public {
         hackQuest.mint(msg.sender, 100);
-        uint256 balance = hackQuest.balanceOf(
-            0x1804c8AB1F12E6bbf3894d4083f33e07309d1f38
-        );
+        uint256 balance = hackQuest.balanceOf(0x1804c8AB1F12E6bbf3894d4083f33e07309d1f38);
         assertEq(101, balance);
     }
 
     function test_MintNft() public {
         hqkitty.safeMint(msg.sender);
-        uint256 balance = hqkitty.balanceOf(
-            0x1804c8AB1F12E6bbf3894d4083f33e07309d1f38
-        );
+        uint256 balance = hqkitty.balanceOf(0x1804c8AB1F12E6bbf3894d4083f33e07309d1f38);
         address sender = msg.sender;
         emit log_address(sender);
         assertEq(2, balance);

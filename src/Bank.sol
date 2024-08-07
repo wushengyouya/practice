@@ -6,14 +6,17 @@
 
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.22;
+
 contract Bank {
     mapping(address => uint256) public balanceOf;
     uint256 private status;
     //存钱
+
     function deposit() public payable {
         balanceOf[msg.sender] += msg.value;
     }
     //重入锁
+
     modifier nonReentrant() {
         // 在第一次调用 nonReentrant 时，_status 将是 0
         require(status == 0, "ReentrancyGuard: reentrant call");
@@ -24,11 +27,12 @@ contract Bank {
         status = 0;
     }
     //取钱
+
     function withdraw() public payable nonReentrant {
         uint256 balance = balanceOf[msg.sender];
         require(balance > 0, "Insufficient balance");
         // 转账 ether !!! 可能激活恶意合约的fallback/receive函数，有重入风险！
-        (bool success, ) = msg.sender.call{value: balance}("");
+        (bool success,) = msg.sender.call{value: balance}("");
         require(success, "Failed to send Ether");
         //检查影响交互模式
         balanceOf[msg.sender] = 0;

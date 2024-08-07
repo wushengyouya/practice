@@ -17,10 +17,7 @@ contract PaymentSplit {
     //初始化受益人
     constructor(address[] memory _payees, uint256[] memory _shares) payable {
         //检查_payee和_share数组长度
-        require(
-            _payees.length == _shares.length,
-            "paymentSplitter: payees and shares length mismatch"
-        );
+        require(_payees.length == _shares.length, "paymentSplitter: payees and shares length mismatch");
         require(_payees.length > 0 && _shares.length > 0, "no payees");
         //添加受益人
         for (uint256 i = 0; i < _payees.length; i++) {
@@ -31,6 +28,7 @@ contract PaymentSplit {
         }
     }
     //收到eth释放事件
+
     receive() external payable virtual {
         emit PaymentRecived(msg.sender, msg.value);
     }
@@ -46,28 +44,26 @@ contract PaymentSplit {
         totalReleased += payment;
         released[_account] += payment;
         //转账
-        (bool success, ) = _account.call{value: payment}("");
+        (bool success,) = _account.call{value: payment}("");
         require(success, "transfer error");
         emit PaymentReleased(_account, payment);
     }
     //计算一个账户能够领取的eth
+
     function releasable(address _account) public view returns (uint256) {
         //计算分账合约总收入totalReceived
         uint256 totalReceived = address(this).balance + totalReleased; //合约余额+总支出
         return pendingPayment(_account, totalReceived, released[_account]);
     }
 
-    function pendingPayment(
-        address _account,
-        uint256 _totalReceived,
-        uint256 _alreadyReleased
-    ) public view returns (uint256) {
+    function pendingPayment(address _account, uint256 _totalReceived, uint256 _alreadyReleased)
+        public
+        view
+        returns (uint256)
+    {
         //account应得的eth = 总应得eth - 已领到eth
         //总收入*占比-已领取eth, _totalReceived * shares[_account] / totalShares -  _alreadyReleased;
-        return
-            (_totalReceived * shares[_account]) /
-            totalShares -
-            _alreadyReleased;
+        return (_totalReceived * shares[_account]) / totalShares - _alreadyReleased;
     }
 
     //新增受益人

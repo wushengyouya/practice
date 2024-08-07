@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.22;
+
 import "forge-std/Test.sol";
 import "../src/PaymentSplit.sol";
 
 contract PaymengSplitTest is Test {
     PaymentSplit ps;
+
     function setUp() public {
         address[] memory payees = new address[](2);
         payees[0] = address(1);
@@ -20,6 +22,7 @@ contract PaymengSplitTest is Test {
         ps.release(payable(address(1)));
         assertEq(5, address(1).balance);
     }
+
     function test_releasable() public {}
     function test_pendingPayment() public {}
 }

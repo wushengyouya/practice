@@ -4,9 +4,11 @@ pragma solidity ^0.8.22;
 import {Test, console} from "forge-std/Test.sol";
 import "../src/TokenVesting.sol";
 import "../src/MyToken.sol";
+
 contract TokenVestingTest is Test {
     MyToken token;
     TokenVesting tokenVesting;
+
     function setUp() public {
         token = new MyToken();
         tokenVesting = new TokenVesting(address(1), 100);

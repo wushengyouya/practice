@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.22;
+
 import "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 //代币水龙头
+
 contract Faucet {
     //定义每次能领多少
     uint256 private allowdToken = 100;
@@ -11,9 +13,11 @@ contract Faucet {
     IERC20 token;
 
     event SendToken(address indexed from, address indexed to, uint256 amount);
+
     constructor(IERC20 _token) {
         token = _token;
     }
+
     function requestedToken() public {
         //不能是零地址
         require(msg.sender != address(0), "address is zero addr");

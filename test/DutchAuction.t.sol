@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.22;
+
 import "forge-std/Test.sol";
 import "../src/DutchAuction.sol";
+
 contract DutchAuctionTest is Test {
     DutchAuction dutch;
+
     function setUp() public {
         dutch = new DutchAuction("kumiko", "KMK");
     }
